@@ -2,6 +2,9 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const axios = require("axios");
+const serviceAccount = require("./serviceAccountKey.json");
+const { db } = require("./firebase");
+
 
 dotenv.config();
 const app = express();
@@ -49,21 +52,33 @@ app.post("/run-code", async (req, res) =>{
             {
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: 'Bearer ${process.env.OPENAI_API_KEY}',
+                    Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
                 },
             }
         );
 
         const explination = aiRes.data.choices[0].message.content;
 
+        await db.collection("userProgress").doc(userId).set(
+            {
+              [lessonId]: {
+                code,
+                output: output.stdout || output.stderr || "No output.",
+                explanation: explination,
+                completedAt: new Date(),
+              },
+            },
+            { merge: true }
+          );
+
         res.json({
             output: output.stdout || output.stderr || "No output.",
             explination,
         });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({error: "Something went wrong with respomse"});
-    }
+        } catch (err) {
+            console.error(err);
+            res.status(500).json({error: "Something went wrong with respomse"});
+        }
 });
 
 

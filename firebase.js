@@ -1,19 +1,12 @@
-import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+const admin = require("firebase-admin");
+const serviceAccount = require("./serviceAccountKey.json");
 
-const firebaseConfig = {
-  apiKey: "AIzaSyDNPG_-BWEUdzowKV3EqJSiRbIGjdsbeoE",
-  authDomain: "learntocode-ca38e.firebaseapp.com",
-  projectId: "learntocode-ca38e",
-  storageBucket: "learntocode-ca38e.firebasestorage.app",
-  messagingSenderId: "417377941927",
-  appId: "1:417377941927:web:214879f83af44328f09e82",
-};
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
-const app = initializeApp(firebaseConfig);
+const db = admin.firestore();
 
-const auth = getAuth(app);
-const db = getFirestore(app);
-
-export { auth, db};
+module.exports = { db };
