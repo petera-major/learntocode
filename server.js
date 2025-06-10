@@ -2,9 +2,6 @@ const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
 const axios = require("axios");
-const serviceAccount = require("./serviceAccountKey.json");
-const { db } = require("./firebase");
-
 
 dotenv.config();
 const app = express();
