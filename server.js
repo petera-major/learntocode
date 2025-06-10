@@ -110,7 +110,7 @@ app.post("/run-code", async (req, res) => {
             },
         {
             role: "user",
-            content: `Can you explain what this code does in simple terms?\n\n${code}`,
+            content: `Here is a student's solution to a coding task:\n\n${code}\n\nPlease tell thme if it solves the task well, point out any issues, and give brief constructive feedback.`,
             },
         ],
         },
